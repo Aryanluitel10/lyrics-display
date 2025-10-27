@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motivational Typing Display with Fast Stars</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            background-color: #0d0a16; /* Dark cosmic background */
+            cursor: default;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+        /* Style for the particles.js canvas */
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #0d0a16;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: 50% 50%;
+            z-index: -1;
+        }
+        #floating-text {
+            
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); 
+            text-align: center; /
+            width: 90%; 
+            max-width: 600px; 
+            
+            pointer-events: none; 
+            color: #ffccdd; 
+            text-shadow: 0 0 8px rgba(255, 204, 221, 0.7); /
+            font-size: 1.5rem;
+            font-weight: 600;
+            line-height: 1.4;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+        }
+        
+        
+        .fade-in {
+            animation: fadeIn 2s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="fade-in">
+
+    <div id="particles-js"></div>
+
+    <div id="floating-text" class="p-2 bg-transparent rounded-lg"></div>
+
+    <script>
+    
+        particlesJS('particles-js', {
+            "particles": {
+                "number": {
+                    "value": 80,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#ffffff"
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    },
+                    "polygon": {
+                        "nb_sides": 5
+                    }
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": false,
+                    "anim": {
+                        "enable": false,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 3,
+                    "random": true,
+                    "anim": {
+                        "enable": false,
+                        "speed": 40,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": false
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 5, 
+                    "direction": "none",
+                    "random": true,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "bubble"
+                    },
+                    "onclick": {
+                        "enable": false,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "bubble": {
+                        "distance": 200,
+                        "size": 6,
+                        "duration": 2,
+                        "opacity": 0.8,
+                        "speed": 3
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+
+
+        
+        const LYRICS = [
+            "If I could do it, then why can't you?",
+            "Get up and make it work",
+            "Yo, if I could do it, then why can't you? (Why?)",
+            "Huh, get up and make it work",
+            "Ain't no way that I'm sitting around",
+            "It's now or never, I'm picking the first (yeah, I'm picking the first)",
+            "You can't tell me that I won't make it",
+            "Knew that I had this gift since birth (I knew)",
+            "Grinding, came out the mud like Roddy",
+            "I had nobody, I came from dirt"
+        ];
+
+        const LINE_DELAYS = [0.3, 0.3, 0.4, 0.3, 0.3, 0.3, 0.5, 0.5, 0.8, 0.8];
+        const CHAR_SPEED = 60; 
+        
+       
+        const floatingText = document.getElementById('floating-text');
+        let lineIndex = 0;
+        let charIndex = 0;
+        let typingTimeout;
+
+       
+
+        function typeNextChar() {
+            const currentLine = LYRICS[lineIndex];
+
+            if (charIndex < currentLine.length) {
+                floatingText.textContent += currentLine[charIndex];
+                charIndex++;
+                typingTimeout = setTimeout(typeNextChar, CHAR_SPEED);
+            } else {
+                const delay = LINE_DELAYS[lineIndex] * 1000;
+                typingTimeout = setTimeout(startNextLine, delay);
+            }
+        }
+
+        function startNextLine() {
+            lineIndex++;
+            charIndex = 0;
+
+            if (lineIndex >= LYRICS.length) {
+                lineIndex = 0;
+                floatingText.textContent = '';
+                typingTimeout = setTimeout(typeNextChar, 1500); 
+            } else {
+                floatingText.textContent = '';
+                typeNextChar();
+            }
+        }
+
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            typeNextChar();
+        });
+
+        window.onbeforeunload = function() {
+            clearTimeout(typingTimeout);
+        };
+    </script>
+</body>
+</html>
